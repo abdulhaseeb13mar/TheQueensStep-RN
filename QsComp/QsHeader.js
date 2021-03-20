@@ -45,7 +45,7 @@ function MyHeader({
           <TouchableOpacity onPress={leftIconAction} style={styles.IconWrap}>
             <LeftIconLibrary
               name={leftIconName}
-              size={H_W.width * 0.065}
+              size={H_W.width * 0.075}
               color={leftIconColor ? leftIconColor : colors.primary}
               style={leftIconStyle ? leftIconStyle : {}}
             />

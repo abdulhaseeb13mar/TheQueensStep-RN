@@ -1,6 +1,6 @@
 export const colors = {
-  primary: '#c55f11',
-  rgb_Primary: '197, 95, 17',
+  primary: '#d62027',
+  rgb_Primary: '214, 32, 39',
   secondary: '#331704',
   lightBackground: '#eeeff0',
   lightGrey1: '#d0d0d0',
@@ -14,4 +14,8 @@ export const colors = {
   lightBackground2: '#d9e0e3',
 };
 
-export const textFont = 'DIN alternate';
+export const textFont = {
+  DINAlternate: 'DIN alternate',
+  FuturaMedium: 'Futura-Medium',
+  GillSans: 'GillSans',
+};

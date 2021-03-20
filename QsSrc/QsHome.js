@@ -21,9 +21,12 @@ import {
   QsremoveFavAction,
   QssetFavAction,
 } from '../QsRedux/QsActions';
-import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
+import dp from '../QsPhotos/b1.png';
+import QsSearchBar from '../QsComp/QsSearchBar';
+import QsHeader from '../QsComp/QsHeader';
 
 function QsHome(props) {
   useEffect(() => {
@@ -38,7 +41,7 @@ function QsHome(props) {
   const QschangeTab = (tab) => {
     setQsCurrentCat(tab);
     const filteredProducts = Data.product.filter(
-      (item) => item.categoryId === tab.categoryId,
+      (item) => item.categoryId === tab.id,
     );
     setQsTabProducts(filteredProducts);
   };
@@ -50,8 +53,191 @@ function QsHome(props) {
     props.QssetCurrentProductAction(item);
     RefNavigation.Navigate('QsSP');
   };
-  return <WrapperScreen style={{backgroundColor: 'white'}}></WrapperScreen>;
+  return (
+    <WrapperScreen style={{backgroundColor: 'white'}}>
+      <ScrollView style={{flex: 1}}>
+        <QsHeader
+          leftIcon={Feather}
+          rightIcon={Feather}
+          leftIconName="heart"
+          rightIconName="shopping-bag"
+          rightIconColor="black"
+          // leftIconAction={QsGoBack}
+          Title={
+            <Text
+              style={{
+                fontWeight: 'bold',
+                fontSize: 20,
+                fontFamily: 'Verdana-Bold',
+              }}>
+              THE{' '}
+              <Text
+                style={{
+                  fontWeight: 'bold',
+                  fontSize: 20,
+                  fontFamily: 'Verdana-Bold',
+                  fontStyle: 'italic',
+                  color: 'black',
+                }}>
+                QUEEN'S
+              </Text>{' '}
+              STEP
+            </Text>
+          }
+        />
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginVertical: HEIGHT * 0.025,
+          }}>
+          <TouchableOpacity
+            style={{
+              width: '85%',
+            }}>
+            <QsSearchBar editable={false} />
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            ...border,
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            flexDirection: 'row',
+          }}>
+          <View
+            style={{
+              height: HEIGHT * 0.4,
+              width: H_W.width * 0.2,
+              marginLeft: H_W.width * 0.03,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <ScrollView
+              style={{width: '100%'}}
+              contentContainerStyle={
+                {
+                  // minHeight: '100%',
+                  // justifyContent: 'space-around',
+                  // alignItems: 'center',
+                }
+              }
+              bounces={false}>
+              {Qscategories.map((item, index) => (
+                <TabList
+                  key={index}
+                  item={item}
+                  QschangeTab={QschangeTab}
+                  QscurrentCat={QscurrentCat}
+                />
+              ))}
+            </ScrollView>
+          </View>
+          <View style={{width: H_W.width * 0.8}}>
+            <Loop
+              style={{...border}}
+              data={QstabProducts}
+              renderItem={({item}) => (
+                <QsVerticalTile item={item} QsFavs={props.QsFavs} />
+              )}
+            />
+          </View>
+        </View>
+        {Data.popular.map((item, index) => (
+          <QsHorizontalTile key={index} item={item} />
+        ))}
+      </ScrollView>
+    </WrapperScreen>
+  );
 }
+
+export const QsHorizontalTile = ({item}) => {
+  const insets = useSafeAreaInsets();
+  const HEIGHT = H_W.height - (insets.bottom + insets.top);
+  return (
+    <View
+      style={{alignItems: 'center', justifyContent: 'center', marginTop: 20}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: H_W.width * 0.85,
+          ...border,
+        }}>
+        <ImageBackground
+          source={item.images}
+          imageStyle={{
+            margin: 8,
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 3,
+            },
+            shadowOpacity: 0.27,
+            shadowRadius: 4.65,
+          }}
+          style={{
+            width: H_W.width * 0.2,
+            height: H_W.width * 0.2,
+            ...border,
+            // backgroundColor: `rgba(${colors.rgb_Primary}, 0.8)`,
+            backgroundColor: `rgba(0,0,0, 0.25)`,
+            borderRadius: 13,
+          }}
+          resizeMode="contain"
+        />
+        <View
+          style={{
+            width: H_W.width * 0.6,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            ...border,
+          }}>
+          <View style={{...border}}>
+            <Text
+              numberOfLines={2}
+              style={{
+                color: 'black',
+                width: H_W.width * 0.35,
+                fontFamily: textFont.FuturaMedium,
+                fontSize: 15.5,
+              }}>
+              {item.name}
+            </Text>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row',
+                alignSelf: 'flex-start',
+                marginTop: HEIGHT * 0.015,
+              }}>
+              <AntDesign name="star" color="#ffce33" size={H_W.width * 0.04} />
+              <Text
+                style={{
+                  color: 'black',
+                  fontWeight: 'bold',
+                  fontSize: 15.5,
+                }}>
+                {item.rating}
+              </Text>
+            </View>
+          </View>
+          <Text
+            style={{
+              color: 'black',
+              fontFamily: 'GillSans-Bold',
+              fontSize: 16,
+            }}>
+            ${item.price}
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
+};
 
 export const QsVerticalTile = ({
   item,
@@ -80,130 +266,106 @@ export const QsVerticalTile = ({
   const insets = useSafeAreaInsets();
   const HEIGHT = H_W.height - (insets.bottom + insets.top);
   return (
-    <TouchableOpacity
-      onPress={() => QsGoToSingleProduct(item)}
+    <View
       style={{
-        position: 'relative',
+        marginRight: H_W.width * 0.1,
+        width: H_W.width * 0.47,
+        borderRadius: 15,
+        margin: 10,
         backgroundColor: 'white',
         shadowColor: '#000',
         shadowOffset: {
           width: 0,
-          height: 3,
+          height: 4,
         },
-        shadowOpacity: 0.27,
-        shadowRadius: 4.65,
-        width: H_W.width * 0.45,
-        borderRadius: 15,
-        marginHorizontal: H_W.width * 0.03,
+        shadowOpacity: 0.32,
+        shadowRadius: 5.46,
       }}>
       <View
         style={{
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          backgroundColor: 'rgba(197, 95, 17, 0.4)',
           borderRadius: 15,
+          paddingVertical: HEIGHT * 0.015,
+          backgroundColor: `rgba(${colors.rgb_Primary}, 0.8)`,
         }}>
         <View
           style={{
-            width: H_W.width * 0.17,
-            height: H_W.width * 0.17,
-            backgroundColor: 'white',
-            borderRadius: 50,
-            opacity: 0.2,
-            transform: [{scaleX: 3.2}, {scaleY: 3}],
-            position: 'absolute',
-            bottom: 0,
-            right: 0,
-            zIndex: -1,
-          }}
-        />
-        <View
-          style={{
-            width: '100%',
-            paddingLeft: H_W.width * 0.025,
-            paddingTop: H_W.width * 0.03,
-            alignSelf: 'stretch',
+            flexDirection: 'row',
+            alignItems: 'center',
             justifyContent: 'space-between',
+            paddingLeft: H_W.width * 0.02,
+            paddingRight: H_W.width * 0.02,
+            marginBottom: HEIGHT * 0.015,
           }}>
           <Text
             numberOfLines={2}
             style={{
-              fontWeight: 'bold',
-              fontSize: 22,
-              color: colors.secondary,
               width: '70%',
-            }}>
-            {item.productName}
-          </Text>
-          <Text
-            style={{
-              marginTop: HEIGHT * 0.01,
-              fontSize: 20,
-              color: colors.secondary,
+              fontSize: 23,
               fontWeight: 'bold',
+              color: 'black',
             }}>
-            ${item.price}
+            {item.name}
           </Text>
+          <Ionicons name="heart-outline" size={30} color="white" />
         </View>
         <ImageBackground
-          source={item.image}
+          source={item.images}
           resizeMode="contain"
-          imageStyle={{borderRadius: 15}}
+          imageStyle={{
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 5,
+            },
+            shadowOpacity: 0.36,
+            shadowRadius: 6.68,
+          }}
           style={{
-            width: H_W.width * 0.32,
-            height: HEIGHT * 0.18,
-            alignSelf: 'flex-end',
-            marginTop: HEIGHT * 0.01,
+            marginLeft: H_W.width * 0.13,
+            width: H_W.width * 0.4,
+            height: HEIGHT * 0.25,
           }}
         />
       </View>
-      <TouchableOpacity
-        onPress={toggleFav}
-        style={{
-          position: 'absolute',
-          top: -3,
-          right: -5,
-          padding: 7,
-          backgroundColor: 'white',
-          borderRadius: 50,
-          zIndex: 10,
-        }}>
-        <Entypo
-          name={fav ? 'heart' : 'heart-outlined'}
-          color={colors.secondary}
-          size={27}
-        />
-      </TouchableOpacity>
-    </TouchableOpacity>
+    </View>
   );
 };
 
-export const TabList = ({item, changeTab, QscurrentCat}) => {
+export const TabList = ({item, QschangeTab, QscurrentCat}) => {
   return (
-    <TouchableOpacity
-      style={styles.HomeTabsWrapper}
-      onPress={() => changeTab(item)}>
-      <View
-        style={{
-          ...styles.QsHome1,
-          backgroundColor:
-            item.categoryName === QscurrentCat.categoryName
-              ? colors.secondary
-              : colors.primary,
-        }}>
-        <ImageBackground
-          source={
-            item.categoryName === QscurrentCat.categoryName
-              ? item.whiteIcon
-              : item.blackIcon
-          }
-          style={styles.QsHome2}
-        />
-      </View>
-    </TouchableOpacity>
+    <View
+      style={{
+        borderColor: 'blue',
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginVertical: H_W.height * 0.02,
+        // transform: [{rotate: '-90deg'}],
+      }}>
+      <TouchableOpacity
+        style={styles.HomeTabsWrapper}
+        onPress={() => QschangeTab(item)}>
+        <Text
+          style={{
+            ...styles.HomeTabsText,
+            color:
+              item.category === QscurrentCat.category
+                ? colors.primary
+                : colors.secondary,
+          }}>
+          {item.category}
+        </Text>
+        {item.category === QscurrentCat.category ? (
+          <View style={styles.tabIndicator} />
+        ) : null}
+      </TouchableOpacity>
+    </View>
   );
 };
-
+const border = {
+  // borderWidth: 1,
+  // borderColor: 'red',
+};
 const styles = StyleSheet.create({
   QsHome21: {},
   QsHome20: {},
@@ -226,7 +388,30 @@ const styles = StyleSheet.create({
   QsHome3: {},
   QsHome2: {},
   QsHome1: {},
-  HomeTabsWrapper: {},
+  tabIndicator: {
+    width: 30,
+    borderWidth: 1.8,
+    borderRadius: 10,
+    marginTop: 4,
+    backgroundColor: colors.primary,
+  },
+  HomeTabsText: {
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  HomeTabsWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginTop: H_W.height * 0.03,
+    // marginHorizontal: H_W.width * 0.05,
+    height: H_W.width * 0.1,
+    paddingHorizontal: H_W.width * 0.02,
+    transform: [{rotate: '-90deg'}],
+    paddingTop: H_W.width * 0.02,
+
+    // flex: 1,
+  },
 });
 
 const mapStateToProps = (state) => {
