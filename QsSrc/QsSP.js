@@ -1,6 +1,7 @@
+/* eslint-disable no-lone-blocks */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
-import {View, Text, ImageBackground} from 'react-native';
+import {View, Text, ImageBackground, TouchableOpacity} from 'react-native';
 import {H_W} from '../QsComp/QsDim';
 import WrapperScreen from '../QsComp/WrapperScreen';
 import {connect} from 'react-redux';
@@ -11,6 +12,8 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Button} from 'react-native-elements';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Feather from 'react-native-vector-icons/Feather';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import QsHeader from '../QsComp/QsHeader';
 import {
@@ -19,12 +22,18 @@ import {
   QsaddCartAction,
   QsremoveCartAction,
 } from '../QsRedux/QsActions';
+import a1 from '../QsPhotos/a1.png';
+import a2 from '../QsPhotos/a2.png';
+import a3 from '../QsPhotos/a3.png';
+import Data from '../QsData';
 
 function SingleProduct(props) {
   useEffect(() => {
     checkIfFav();
+    getRelatedImages();
   }, []);
   const [fav, setFav] = useState(false);
+  const [relImages, setRelImages] = useState([]);
 
   const insets = useSafeAreaInsets();
   const HEIGHT = H_W.height - (insets.bottom + insets.top);
@@ -38,182 +47,313 @@ function SingleProduct(props) {
       }
     }
   };
+
   const toggleFav = () => {
     fav
       ? props.QsremoveFavAction(QsProduct.id)
       : props.QssetFavAction(QsProduct);
     setFav(!fav);
   };
-
+  const getRelatedImages = () => {
+    let rel_images = [];
+    for (let Qs = 0; Qs < Data.images.length; Qs++) {
+      if (Data.images[Qs].productid === QsProduct.id) {
+        rel_images.push(Data.images[Qs].images);
+        if (rel_images === 3) {
+          break;
+        }
+      }
+    }
+    setRelImages(rel_images);
+  };
   const QsAddToCart = () => {
     props.QsaddCartAction({...QsProduct});
   };
+
   const QsRemoveFromCart = () => {
     props.QsCart[QsProduct.id].added !== 0 &&
       props.QsremoveCartAction(QsProduct);
   };
 
-  // const QsGotoSearch = () => NavigationRef.Navigate('QsSearch');
+  const QsGotoCart = () => NavigationRef.Navigate('QsCart');
   const QsGoBack = () => NavigationRef.GoBack();
 
   return (
     <WrapperScreen
+      statusColor={`rgba(${colors.rgb_Primary}, 0.3)`}
       style={{
-        backgroundColor: 'white',
+        backgroundColor: `rgba(${colors.rgb_Primary}, 0.3)`,
       }}>
       <KeyboardAwareScrollView bounces={false}>
         <QsHeader
           leftIcon={Entypo}
-          rightIcon={Entypo}
-          rightIconName={fav ? 'heart' : 'heart-outlined'}
+          rightIcon={Feather}
+          rightIconName="shopping-bag"
           leftIconName="chevron-left"
           leftIconAction={QsGoBack}
           leftIconColor={colors.secondary}
-          rightIconAction={toggleFav}
+          rightIconAction={QsGotoCart}
           rightIconColor={colors.secondary}
         />
-        <View style={{alignItems: 'center', justifyContent: 'center'}}>
-          <ImageBackground
-            source={QsProduct.image}
-            style={{width: H_W.width * 0.9, height: HEIGHT * 0.45}}
-            resizeMode="contain"
-          />
-        </View>
+        <Text
+          style={{
+            marginLeft: H_W.width * 0.05,
+            fontSize: 33,
+            marginTop: HEIGHT * 0.02,
+            fontFamily: textFont.FuturaMedium,
+          }}>
+          {QsProduct.name}
+        </Text>
+        <Text
+          style={{
+            marginLeft: H_W.width * 0.05,
+            fontSize: 23,
+            fontWeight: 'bold',
+            marginTop: HEIGHT * 0.025,
+            fontFamily: textFont.FuturaMedium,
+          }}>
+          ${QsProduct.price}
+        </Text>
         <View
           style={{
-            alignItems: 'center',
-            justifyContent: 'space-between',
             flexDirection: 'row',
-            paddingHorizontal: H_W.width * 0.03,
-            marginTop: HEIGHT * 0.02,
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+            marginLeft: H_W.width * 0.05,
+            width: H_W.width * 1.01,
+            marginTop: HEIGHT * 0.06,
+            overflow: 'visible',
           }}>
-          <Text
+          <View
             style={{
-              fontWeight: 'bold',
-              color: colors.secondary,
-              fontFamily: textFont,
-              fontSize: 30,
-              width: H_W.width * 0.6,
+              alignItems: 'center',
+              alignSelf: 'stretch',
+              paddingTop: HEIGHT * 0.02,
+              justifyContent: 'space-between',
             }}>
-            {QsProduct.productName}
-          </Text>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Fontisto name="stopwatch" color={colors.secondary} size={24} />
-            <Text
+            {relImages.length > 0 &&
+              relImages.map((img, index) => (
+                <View
+                  key={index}
+                  style={{
+                    backgroundColor: 'white',
+                    padding: 6,
+                    borderRadius: 15,
+                    shadowColor: '#000',
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                  }}>
+                  <ImageBackground
+                    source={img}
+                    style={{
+                      width: H_W.width * 0.15,
+                      height: H_W.width * 0.15,
+                      borderRadius: 15,
+                    }}
+                    resizeMode="contain"
+                  />
+                </View>
+              ))}
+          </View>
+          <View>
+            <ImageBackground
+              source={QsProduct.images}
               style={{
-                fontSize: 17.5,
-                marginLeft: H_W.width * 0.02,
-                color: colors.darkGray,
-                fontFamily: textFont,
-              }}>
-              20 min
-            </Text>
+                width: H_W.width * 0.7,
+                height: H_W.width * 0.7,
+                position: 'relative',
+              }}
+              imageStyle={{
+                transform: [{rotate: '-13deg'}],
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 0,
+                  height: 20,
+                },
+                shadowOpacity: 0.45,
+                shadowRadius: 20.68,
+              }}
+              resizeMode="contain">
+              <View
+                style={{
+                  width: 80,
+                  height: 80,
+                  backgroundColor: `rgba(${colors.rgb_Primary}, 0.06)`,
+                  borderRadius: 50,
+                  opacity: 1,
+                  transform: [{scaleX: 3.7}, {scaleY: 3.7}],
+                  position: 'absolute',
+                  top: HEIGHT * 0.1,
+                  right: H_W.width * 0.1,
+                  zIndex: -1,
+                  shadowColor: `rgba(${colors.rgb_Primary}, 1)`,
+                  // shadowColor: '#000',
+                  shadowOffset: {
+                    width: -3,
+                    height: 5,
+                  },
+                  shadowOpacity: 1,
+                  shadowRadius: 1,
+                }}
+              />
+            </ImageBackground>
           </View>
         </View>
         <Text
           style={{
-            marginLeft: H_W.width * 0.03,
-            fontSize: 20.5,
-            marginTop: HEIGHT * 0.01,
+            marginLeft: H_W.width * 0.05,
+            fontSize: 23,
             fontWeight: 'bold',
-            fontFamily: textFont,
+            marginTop: HEIGHT * 0.05,
           }}>
-          Details
+          Overview
         </Text>
         <Text
           style={{
-            marginHorizontal: H_W.width * 0.03,
-            fontWeight: 'bold',
-            fontFamily: textFont,
+            paddingHorizontal: H_W.width * 0.05,
+            fontSize: 18,
             color: colors.darkGray,
-            fontSize: 17,
-            lineHeight: HEIGHT * 0.03,
-            marginTop: HEIGHT * 0.01,
+            fontWeight: 'bold',
+            marginTop: HEIGHT * 0.015,
+            opacity: 0.5,
+            paddingBottom: HEIGHT * 0.02,
           }}>
-          {QsProduct.description}
+          {QsProduct.about}
         </Text>
+      </KeyboardAwareScrollView>
+      <View
+        style={{
+          // ...border,
+          backgroundColor: 'white',
+          shadowColor: '#F3BCBE',
+          // shadowColor: 'white',
+          shadowOffset: {
+            width: 0,
+            height: -15,
+          },
+          shadowOpacity: 1,
+          shadowRadius: 20.27,
+        }}>
         <View
           style={{
-            paddingHorizontal: H_W.width * 0.03,
-            flexDirection: 'row',
+            backgroundColor: `rgba(${colors.rgb_Primary}, 0.3)`,
             alignItems: 'center',
-            justifyContent: 'space-between',
-            marginVertical: HEIGHT * 0.04,
+            justifyContent: 'space-evenly',
+            flexDirection: 'row',
+            paddingHorizontal: H_W.width * 0.05,
+            paddingVertical: 20,
           }}>
-          <Text
-            style={{
-              fontSize: 26,
-              fontWeight: 'bold',
-              fontFamily: textFont,
-            }}>
-            $ {QsProduct.price}
-          </Text>
           {props.QsCart[QsProduct.id] !== undefined &&
           props.QsCart[QsProduct.id].added !== 0 ? (
             <View
               style={{
-                width: H_W.width * 0.35,
-                paddingHorizontal: H_W.width * 0.01,
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: colors.lightGrey1,
+                backgroundColor: 'white',
+                alignSelf: 'stretch',
+                width: H_W.width * 0.55,
+                borderRadius: 50,
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 0,
+                  height: 10,
+                },
+                shadowOpacity: 0.3,
+                shadowRadius: 10.27,
               }}>
-              <Button
+              <TouchableOpacity
                 onPress={QsRemoveFromCart}
-                title=""
-                buttonStyle={{backgroundColor: 'transparent'}}
-                icon={
-                  <AntDesign
-                    color={colors.secondary}
-                    name="minuscircleo"
-                    size={23}
-                  />
-                }
-              />
-              <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+                style={{
+                  alignSelf: 'stretch',
+                  width: H_W.width * 0.15,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Feather name="minus" color="black" size={25} />
+              </TouchableOpacity>
+              <Text
+                style={{
+                  fontSize: 23,
+                  fontWeight: 'bold',
+                }}>
                 {props.QsCart[QsProduct.id].added}
               </Text>
-              <Button
+              <TouchableOpacity
                 onPress={QsAddToCart}
-                title=""
-                buttonStyle={{backgroundColor: 'transparent'}}
-                icon={
-                  <AntDesign
-                    color={colors.secondary}
-                    name="pluscircleo"
-                    size={23}
-                  />
-                }
-              />
+                style={{
+                  alignSelf: 'stretch',
+                  width: H_W.width * 0.15,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Feather name="plus" color="black" size={25} />
+              </TouchableOpacity>
             </View>
           ) : (
             <Button
               onPress={QsAddToCart}
-              title="Add to Cart    "
+              title="ADD TO CART"
+              raised
+              buttonStyle={{
+                backgroundColor: colors.primary,
+                height: HEIGHT * 0.07,
+                alignSelf: 'stretch',
+                width: H_W.width * 0.55,
+                borderRadius: 13,
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 0,
+                  height: 10,
+                },
+                shadowOpacity: 0.3,
+                shadowRadius: 10.27,
+              }}
+              containerStyle={{
+                borderRadius: 13,
+              }}
               titleStyle={{
                 fontWeight: 'bold',
-                color: colors.secondary,
-                fontFamily: textFont,
+                fontSize: 15,
+                fontFamily: textFont.FuturaMedium,
               }}
-              buttonStyle={{backgroundColor: colors.primary, borderRadius: 5}}
-              containerStyle={{borderRadius: 5}}
-              iconRight
-              raised
-              icon={
-                <AntDesign
-                  color={colors.secondary}
-                  name="pluscircleo"
-                  size={25}
-                />
-              }
             />
           )}
+          <TouchableOpacity
+            onPress={toggleFav}
+            style={{
+              height: HEIGHT * 0.073,
+              // alignSelf: 'stretch',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: H_W.width * 0.16,
+              borderRadius: 13,
+              borderWidth: 2,
+              borderColor: colors.primary,
+              backgroundColor: 'white',
+            }}>
+            <Ionicons
+              name={fav ? 'heart' : 'heart-outline'}
+              color={colors.primary}
+              size={30}
+            />
+          </TouchableOpacity>
         </View>
-      </KeyboardAwareScrollView>
+      </View>
     </WrapperScreen>
   );
 }
+
+const border = {
+  borderWidth: 1,
+  borderColor: 'black',
+};
 
 const mapStateToProps = (state) => {
   return {

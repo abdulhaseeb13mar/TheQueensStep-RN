@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {connect} from 'react-redux';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 import {
   QsremoveFavAction,
   QssetFavAction,
@@ -26,41 +26,28 @@ const QsFavourites = (props) => {
 
   return (
     <WrapperScreen style={{backgroundColor: 'white'}}>
-      <View style={{flex: 1}}>
-        <Loop
-          ListHeaderComponent={
-            <UseHeader
-              leftIcon={Entypo}
-              leftIconName="chevron-left"
-              leftIconAction={QsGoBack}
-              Title={`${props.QsFavs.length} Favourites`}
-            />
-          }
-          data={props.QsFavs}
-          renderItem={({item}) => (
-            <QsHorizontalTile
-              item={item}
-              QsGoToSingleProduct={QsGoToSingleProduct}
-              QsFavs={props.QsFavs}
-              QssetFav={(i) => props.QssetFavAction(i)}
-              QsremoveFav={(i) => props.QsremoveFavAction(i)}
-            />
-          )}
-          horizontal={false}
-        />
-      </View>
-      <Entypo
-        name="heart"
-        color={`rgba(${colors.rgb_Primary},0.2)`}
-        style={{
-          position: 'absolute',
-          bottom: -H_W.height * 0.07,
-          right: -H_W.width * 0.25,
-          zIndex: -1,
-          transform: [{rotate: '-19deg'}],
-        }}
-        size={H_W.width * 0.75}
+      <UseHeader
+        leftIcon={Entypo}
+        leftIconName="chevron-left"
+        leftIconColor="black"
+        leftIconAction={QsGoBack}
+        Title={
+          <Text
+            style={{
+              color: 'black',
+              fontSize: 22,
+            }}>
+            {props.QsFavs.length} Favourites
+          </Text>
+        }
       />
+      {props.QsFavs.map((item, index) => (
+        <QsHorizontalTile
+          key={index}
+          item={item}
+          QsGoToSingleProduct={QsGoToSingleProduct}
+        />
+      ))}
     </WrapperScreen>
   );
 };

@@ -13,6 +13,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import QsSearchBar from '../QsComp/QsSearchBar';
 import {colors} from '../QsComp/QsColor';
 import {Avatar} from 'react-native-elements';
+import UseHeader from '../QsComp/QsHeader';
+import {QsHorizontalTile} from './QsHome';
 
 function Search(props) {
   const [searchText, setSearchText] = useState('');
@@ -22,7 +24,7 @@ function Search(props) {
 
   const RenderSearchedResult = () => {
     var SearchedItems = Data.product.filter((item) =>
-      item.productName.toLowerCase().includes(searchText.toLowerCase()),
+      item.name.toLowerCase().includes(searchText.toLowerCase()),
     );
     return SearchedItems.length === 0 ? (
       <Text style={{fontWeight: 'bold', textAlign: 'center'}}>
@@ -40,75 +42,29 @@ function Search(props) {
 
   const CardRender = (Arr) => {
     return Arr.map((item, index) => (
-      <View
+      <QsHorizontalTile
         key={index}
-        style={{
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginTop: HEIGHT * 0.02,
-        }}>
-        <TouchableOpacity onPress={() => QsGoToSingleProduct(item)}>
-          <Avatar
-            rounded
-            size={H_W.width * 0.6}
-            source={item.images}
-            containerStyle={{
-              backgroundColor: colors.secondary,
-              elevation: 24,
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 12,
-              },
-              shadowOpacity: 0.58,
-              shadowRadius: 16.0,
-              marginLeft: H_W.width * 0.04,
-            }}
-          />
-        </TouchableOpacity>
-      </View>
+        item={item}
+        QsGoToSingleProduct={QsGoToSingleProduct}
+      />
     ));
   };
   const QsGoBack = () => NavigationRef.GoBack();
 
   const changeSearchText = (t) => setSearchText(t);
   return (
-    <WrapperScreen
-      style={{
-        backgroundColor: `rgba(${colors.rgb_Primary}, 0.15)`,
-      }}>
-      <View
-        style={{
-          width: H_W.width,
-          height: HEIGHT * 0.15,
-          borderBottomLeftRadius: 30,
-          borderBottomRightRadius: 30,
-          backgroundColor: colors.primary,
-          paddingHorizontal: H_W.width * 0.04,
-          elevation: 4,
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.23,
-          shadowRadius: 2.62,
-        }}>
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            marginTop: HEIGHT * 0.04,
-            marginBottom: HEIGHT * 0.05,
-            flexDirection: 'row',
-          }}>
-          <TouchableOpacity onPress={QsGoBack}>
-            <Entypo name="chevron-left" color="white" size={H_W.width * 0.06} />
-          </TouchableOpacity>
-          <View style={{width: '85%', marginLeft: H_W.width * 0.05}}>
-            <QsSearchBar changeSearchText={changeSearchText} />
-          </View>
+    <WrapperScreen style={{backgroundColor: 'white'}}>
+      <UseHeader
+        leftIcon={Entypo}
+        leftIconName="chevron-left"
+        leftIconAction={QsGoBack}
+        rightIconAction={() => props.QsresetCart()}
+        leftIconColor="black"
+        Title={<Text style={{color: 'black', fontSize: 22}}>Search</Text>}
+      />
+      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <View style={{width: '85%', margin: 'auto'}}>
+          <QsSearchBar changeSearchText={changeSearchText} />
         </View>
       </View>
       <KeyboardAwareScrollView

@@ -48,7 +48,7 @@ function QsHome(props) {
 
   const QsGotoFav = () => RefNavigation.Navigate('QsFav');
   const QsGotoCart = () => RefNavigation.Navigate('QsCart');
-  // const QsGotoSearch = () => RefNavigation.Navigate('QsSearch');
+  const QsGotoSearch = () => RefNavigation.Navigate('QsSearch');
   const QsGoToSingleProduct = (item) => {
     props.QssetCurrentProductAction(item);
     RefNavigation.Navigate('QsSP');
@@ -62,7 +62,8 @@ function QsHome(props) {
           leftIconName="heart"
           rightIconName="shopping-bag"
           rightIconColor="black"
-          // leftIconAction={QsGoBack}
+          leftIconAction={QsGotoFav}
+          rightIconAction={QsGotoCart}
           Title={
             <Text
               style={{
@@ -92,6 +93,7 @@ function QsHome(props) {
             marginVertical: HEIGHT * 0.025,
           }}>
           <TouchableOpacity
+            onPress={QsGotoSearch}
             style={{
               width: '85%',
             }}>
@@ -113,16 +115,7 @@ function QsHome(props) {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <ScrollView
-              style={{width: '100%'}}
-              contentContainerStyle={
-                {
-                  // minHeight: '100%',
-                  // justifyContent: 'space-around',
-                  // alignItems: 'center',
-                }
-              }
-              bounces={false}>
+            <ScrollView style={{width: '100%'}} bounces={false}>
               {Qscategories.map((item, index) => (
                 <TabList
                   key={index}
@@ -138,24 +131,44 @@ function QsHome(props) {
               style={{...border}}
               data={QstabProducts}
               renderItem={({item}) => (
-                <QsVerticalTile item={item} QsFavs={props.QsFavs} />
+                <QsVerticalTile
+                  item={item}
+                  QsFavs={props.QsFavs}
+                  QssetFav={(i) => props.QssetFavAction(i)}
+                  QsremoveFav={(i) => props.QsremoveFavAction(i)}
+                  QsGoToSingleProduct={QsGoToSingleProduct}
+                />
               )}
             />
           </View>
         </View>
+        <Text
+          style={{
+            marginLeft: H_W.width * 0.08,
+            fontSize: 20,
+            fontWeight: 'bold',
+            marginTop: HEIGHT * 0.015,
+          }}>
+          Popular
+        </Text>
         {Data.popular.map((item, index) => (
-          <QsHorizontalTile key={index} item={item} />
+          <QsHorizontalTile
+            key={index}
+            item={item}
+            QsGoToSingleProduct={QsGoToSingleProduct}
+          />
         ))}
       </ScrollView>
     </WrapperScreen>
   );
 }
 
-export const QsHorizontalTile = ({item}) => {
+export const QsHorizontalTile = ({item, QsGoToSingleProduct}) => {
   const insets = useSafeAreaInsets();
   const HEIGHT = H_W.height - (insets.bottom + insets.top);
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => QsGoToSingleProduct(item)}
       style={{alignItems: 'center', justifyContent: 'center', marginTop: 20}}>
       <View
         style={{
@@ -176,13 +189,13 @@ export const QsHorizontalTile = ({item}) => {
             },
             shadowOpacity: 0.27,
             shadowRadius: 4.65,
+            transform: [{rotate: '-13deg'}],
           }}
           style={{
             width: H_W.width * 0.2,
             height: H_W.width * 0.2,
             ...border,
-            // backgroundColor: `rgba(${colors.rgb_Primary}, 0.8)`,
-            backgroundColor: `rgba(0,0,0, 0.25)`,
+            backgroundColor: 'rgba(0,0,0, 0.25)',
             borderRadius: 13,
           }}
           resizeMode="contain"
@@ -235,7 +248,7 @@ export const QsHorizontalTile = ({item}) => {
           </Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -266,7 +279,8 @@ export const QsVerticalTile = ({
   const insets = useSafeAreaInsets();
   const HEIGHT = H_W.height - (insets.bottom + insets.top);
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => QsGoToSingleProduct(item)}
       style={{
         marginRight: H_W.width * 0.1,
         width: H_W.width * 0.47,
@@ -306,7 +320,13 @@ export const QsVerticalTile = ({
             }}>
             {item.name}
           </Text>
-          <Ionicons name="heart-outline" size={30} color="white" />
+          <TouchableOpacity onPress={toggleFav}>
+            <Ionicons
+              name={fav ? 'heart' : 'heart-outline'}
+              size={30}
+              color="white"
+            />
+          </TouchableOpacity>
         </View>
         <ImageBackground
           source={item.images}
@@ -319,6 +339,7 @@ export const QsVerticalTile = ({
             },
             shadowOpacity: 0.36,
             shadowRadius: 6.68,
+            transform: [{rotate: '-13deg'}],
           }}
           style={{
             marginLeft: H_W.width * 0.13,
@@ -327,7 +348,7 @@ export const QsVerticalTile = ({
           }}
         />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

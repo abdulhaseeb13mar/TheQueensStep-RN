@@ -15,7 +15,7 @@ const QsCartReducer = (st = cart, action) => {
   switch (action.type) {
     case ActionTypes.ADD_ITEM_CART:
       if (!prev_items[action.payload.id]) {
-        prev_items[action.payload.id] = {...action.payload};
+        prev_items[action.payload.id] = {...action.payload, added: 0};
       }
       let added1 = prev_items[action.payload.id].added + 1;
       prev_items[action.payload.id].added = added1;

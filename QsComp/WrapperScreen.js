@@ -3,6 +3,7 @@ import React from 'react';
 import {View, StatusBar} from 'react-native';
 import {SafeAreaInsetsContext} from 'react-native-safe-area-context';
 import {colors} from './QsColor';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 function WrapperScreen(props) {
   const {
@@ -10,21 +11,24 @@ function WrapperScreen(props) {
     bottom,
     statusBar = 'white',
     barStyle = 'dark-content',
-    statusColor = 'white',
+    statusColor,
   } = props;
+  const insets = useSafeAreaInsets();
   return (
     <View style={{flex: 1, backgroundColor: statusBar}}>
-      <StatusBar
-        // backgroundColor={`rgba(${colors.rgb_Primary}, 0.1)`}
-        backgroundColor={statusColor}
-        barStyle={barStyle}
-      />
+      <View
+        style={{
+          height: insets.top,
+          backgroundColor: statusColor,
+        }}>
+        <StatusBar translucent barStyle={barStyle} />
+      </View>
       <SafeAreaInsetsContext.Consumer>
         {(insets) => (
           <View
             style={{
               flex: 1,
-              marginTop: top === 0 ? top : insets.top,
+              // marginTop: top === 0 ? top : insets.top,
               paddingBottom: bottom === 0 ? bottom : insets.bottom,
               backgroundColor: 'white',
               ...props.style,
