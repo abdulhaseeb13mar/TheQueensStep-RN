@@ -377,10 +377,7 @@ export const TabList = ({item, QschangeTab, QscurrentCat}) => {
     </View>
   );
 };
-const border = {
-  // borderWidth: 1,
-  // borderColor: 'red',
-};
+
 const styles = StyleSheet.create({
   QsHome21: {},
   QsHome20: {},
