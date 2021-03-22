@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {connect} from 'react-redux';
-import {View, Text} from 'react-native';
+import {Text} from 'react-native';
 import {
   QsremoveFavAction,
   QssetFavAction,
@@ -11,10 +11,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import UseHeader from '../QsComp/QsHeader';
 import WrapperScreen from '../QsComp/WrapperScreen';
 import NavigationRef from '../QsComp/RefNavigation';
-import Loop from '../QsComp/QsFlatList';
 import {QsHorizontalTile} from './QsHome';
-import {H_W} from '../QsComp/QsDim';
-import {colors} from '../QsComp/QsColor';
 
 const QsFavourites = (props) => {
   const QsGoToSingleProduct = (item) => {

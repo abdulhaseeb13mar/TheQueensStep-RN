@@ -261,10 +261,7 @@ export const Cart = (props) => {
     </WrapperScreen>
   );
 };
-const border = {
-  borderWidth: 1,
-  borderColor: 'black',
-};
+
 const mapStateToProps = (state) => ({
   QsCart: state.QsCartReducer.items,
   QsTotal: state.QsCartReducer.totalAmount,

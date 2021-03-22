@@ -24,7 +24,6 @@ import {
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
-import dp from '../QsPhotos/b1.png';
 import QsSearchBar from '../QsComp/QsSearchBar';
 import QsHeader from '../QsComp/QsHeader';
 
@@ -102,7 +101,6 @@ function QsHome(props) {
         </View>
         <View
           style={{
-            ...border,
             alignItems: 'center',
             justifyContent: 'flex-start',
             flexDirection: 'row',
@@ -128,7 +126,6 @@ function QsHome(props) {
           </View>
           <View style={{width: H_W.width * 0.8}}>
             <Loop
-              style={{...border}}
               data={QstabProducts}
               renderItem={({item}) => (
                 <QsVerticalTile
@@ -176,7 +173,6 @@ export const QsHorizontalTile = ({item, QsGoToSingleProduct}) => {
           alignItems: 'center',
           justifyContent: 'space-between',
           width: H_W.width * 0.85,
-          ...border,
         }}>
         <ImageBackground
           source={item.images}
@@ -194,7 +190,6 @@ export const QsHorizontalTile = ({item, QsGoToSingleProduct}) => {
           style={{
             width: H_W.width * 0.2,
             height: H_W.width * 0.2,
-            ...border,
             backgroundColor: 'rgba(0,0,0, 0.25)',
             borderRadius: 13,
           }}
@@ -206,9 +201,8 @@ export const QsHorizontalTile = ({item, QsGoToSingleProduct}) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            ...border,
           }}>
-          <View style={{...border}}>
+          <View>
             <Text
               numberOfLines={2}
               style={{
@@ -425,13 +419,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     marginTop: H_W.height * 0.03,
-    // marginHorizontal: H_W.width * 0.05,
     height: H_W.width * 0.1,
     paddingHorizontal: H_W.width * 0.02,
     transform: [{rotate: '-90deg'}],
     paddingTop: H_W.width * 0.02,
-
-    // flex: 1,
   },
 });
 

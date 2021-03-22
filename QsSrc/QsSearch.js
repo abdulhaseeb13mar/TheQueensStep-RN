@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text} from 'react-native';
 import WrapperScreen from '../QsComp/WrapperScreen';
 import {H_W} from '../QsComp/QsDim';
 import NavigationRef from '../QsComp/RefNavigation';
@@ -11,8 +11,6 @@ import {connect} from 'react-redux';
 import {QssetCurrentProductAction} from '../QsRedux/QsActions';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import QsSearchBar from '../QsComp/QsSearchBar';
-import {colors} from '../QsComp/QsColor';
-import {Avatar} from 'react-native-elements';
 import UseHeader from '../QsComp/QsHeader';
 import {QsHorizontalTile} from './QsHome';
 

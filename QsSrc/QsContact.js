@@ -4,14 +4,13 @@ import {Text, View, StyleSheet, TextInput} from 'react-native';
 import {connect} from 'react-redux';
 import WrapperScreen from '../QsComp/WrapperScreen';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import {H_W} from '../QsComp/QsDim';
 import {colors} from '../QsComp/QsColor';
 import {Button, Overlay} from 'react-native-elements';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {isFormValid} from '../QsComp/validation';
 import NavPointer from '../QsComp/RefNavigation';
 import {QsUserAction, QsresetCart} from '../QsRedux/QsActions';
@@ -33,7 +32,7 @@ const ConfirmOrder = (props) => {
   const [addressErrMsg, setAddressErrMsg] = useState('');
   const [phone, setPhone] = useState('');
 
-  const Confirm = () => {
+  const QsConfirm = () => {
     const formValidResponse = isFormValid(firstName, email, phone, address);
     if (!formValidResponse.status) {
       errorMsgHandler(formValidResponse.errCategory, formValidResponse.errMsg);
@@ -78,9 +77,7 @@ const ConfirmOrder = (props) => {
       );
       const response = await res.json();
       setLoading(false);
-      response.status
-        ? NavPointer.Push('QsConfirmOrder')
-        : ShowToast('Some error occurred');
+      response.status ? setShowModal(true) : ShowToast('Some error occurred');
     } catch (error) {
       console.log(error);
     }
@@ -119,7 +116,7 @@ const ConfirmOrder = (props) => {
   const changePhone = (t) => setPhone(t);
   const changeAddress = (t) => setAddress(t);
   const changeEmail = (t) => setEmail(t);
-  const goBack = () => NavPointer.GoBack();
+  const QsGoBack = () => NavPointer.GoBack();
   const changeFirstName = (t) => setFirstName(t);
 
   return (
@@ -128,31 +125,21 @@ const ConfirmOrder = (props) => {
         <UseHeader
           leftIcon={Entypo}
           leftIconName="chevron-left"
-          Title="Checkout"
-          leftIconAction={goBack}
-          titleStyle={{
-            textShadowColor: '#bcbcbc',
-            textShadowOffset: {width: 2, height: 2},
-            textShadowRadius: 2,
-          }}
-          leftIconStyle={{
-            textShadowColor: '#bcbcbc',
-            textShadowOffset: {width: 2, height: 2},
-            textShadowRadius: 2,
-          }}
+          leftIconAction={QsGoBack}
+          rightIconAction={() => props.QsresetCart()}
+          leftIconColor="black"
+          Title={<Text style={{color: 'black', fontSize: 22}}>Checkout</Text>}
         />
-        {/* <View style={{...styles.QsSummaryOverlay, marginBottom: HEIGHT * 0.02}}>
-          <View style={styles.QsSm1}>
-            <View style={styles.QsSm2}>
-              <Text>Total:</Text>
-              <Text style={{fontWeight: 'bold'}}>${props.total}</Text>
-            </View>
-            <View style={styles.QsSm3}>
-              <Text style={styles.QsSm4}>Payment Mode:</Text>
-              <Text style={styles.QsSm4}>Payment on delivery</Text>
-            </View>
-          </View>
-        </View> */}
+
+        <Text
+          style={{
+            marginLeft: H_W.width * 0.03,
+            fontSize: 20,
+            fontWeight: 'bold',
+            marginVertical: HEIGHT * 0.015,
+          }}>
+          Personal Information
+        </Text>
         <View style={styles.QsPersonalInfoWrapper}>
           <View style={styles.QsSinglePersonalInfoWrapper}>
             <Text
@@ -244,6 +231,29 @@ const ConfirmOrder = (props) => {
             </View>
           </View>
         </View>
+        <Text
+          style={{
+            marginLeft: H_W.width * 0.03,
+            fontSize: 20,
+            fontWeight: 'bold',
+            marginVertical: HEIGHT * 0.015,
+          }}>
+          Order Details
+        </Text>
+        <View style={{...styles.QsSummaryOverlay, marginBottom: HEIGHT * 0.02}}>
+          <View style={styles.QsSm1}>
+            <View style={styles.QsSm2}>
+              <Text style={{fontSize: 23}}>Total:</Text>
+              <Text style={{fontWeight: 'bold', fontSize: 23}}>
+                ${props.total}
+              </Text>
+            </View>
+            <View style={styles.QsSm3}>
+              <Text style={styles.QsSm4}>Payment Mode:</Text>
+              <Text style={styles.QsSm4}>Cash on delivery</Text>
+            </View>
+          </View>
+        </View>
         <View
           style={{
             ...styles.QsConfirmButtonWrapper,
@@ -260,7 +270,7 @@ const ConfirmOrder = (props) => {
             titleStyle={{color: 'white', fontWeight: 'bold'}}
             loadingProps={{color: 'black'}}
             loading={loading}
-            onPress={Confirm}
+            onPress={QsConfirm}
           />
         </View>
         <Overlay
@@ -272,30 +282,18 @@ const ConfirmOrder = (props) => {
               ...styles.QsModalWrapper,
               paddingVertical: HEIGHT * 0.04,
             }}>
-            <Ionicons
-              name="ios-ice-cream-sharp"
+            <MaterialCommunityIcons
+              name="shoe-heel"
               size={H_W.width * 0.25}
               color={colors.primary}
             />
             <Text style={styles.QsModalHeadText}>THANK YOU!</Text>
             <Text style={styles.QsModalSubText}>
-              You will recieve your ice cream shortly!
+              Your order has been confirmed!
             </Text>
           </View>
         </Overlay>
       </KeyboardAwareScrollView>
-      <MaterialIcons
-        name="delivery-dining"
-        color={`rgba(${colors.rgb_Primary},0.2)`}
-        style={{
-          position: 'absolute',
-          bottom: -H_W.height * 0.07,
-          right: -H_W.width * 0.1,
-          zIndex: -1,
-          transform: [{rotate: '-19deg'}],
-        }}
-        size={H_W.width * 0.7}
-      />
     </WrapperScreen>
   );
 };
@@ -311,7 +309,7 @@ export default connect(mapStateToProps, {QsUserAction, QsresetCart})(
 );
 
 const styles = StyleSheet.create({
-  QsSm4: {fontSize: H_W.width * 0.03, fontWeight: 'bold'},
+  QsSm4: {fontSize: H_W.width * 0.045, fontWeight: 'bold'},
   QsSm3: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -323,8 +321,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   QsSm1: {
-    width: '75%',
-    backgroundColor: colors.secondary,
+    width: '85%',
+    backgroundColor: `rgba(${colors.rgb_Primary}, 0.3)`,
     borderRadius: 18,
     elevation: 2,
     shadowColor: '#000',
@@ -401,8 +399,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     backgroundColor: colors.lightGrey4,
     paddingHorizontal: H_W.width * 0.02,
-    borderRadius: 15,
-    borderWidth: 2,
+    borderRadius: 1,
+    borderWidth: 1,
     borderColor: colors.secondary,
   },
   QsPersonalInfoHeadingName: {

@@ -1,4 +1,3 @@
-/* eslint-disable no-lone-blocks */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
 import {View, Text, ImageBackground, TouchableOpacity} from 'react-native';
@@ -11,10 +10,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Button} from 'react-native-elements';
 import Entypo from 'react-native-vector-icons/Entypo';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
 import QsHeader from '../QsComp/QsHeader';
 import {
   QsremoveFavAction,
@@ -22,9 +19,6 @@ import {
   QsaddCartAction,
   QsremoveCartAction,
 } from '../QsRedux/QsActions';
-import a1 from '../QsPhotos/a1.png';
-import a2 from '../QsPhotos/a2.png';
-import a3 from '../QsPhotos/a3.png';
 import Data from '../QsData';
 
 function SingleProduct(props) {
@@ -191,7 +185,6 @@ function SingleProduct(props) {
                   right: H_W.width * 0.1,
                   zIndex: -1,
                   shadowColor: `rgba(${colors.rgb_Primary}, 1)`,
-                  // shadowColor: '#000',
                   shadowOffset: {
                     width: -3,
                     height: 5,
@@ -227,10 +220,8 @@ function SingleProduct(props) {
       </KeyboardAwareScrollView>
       <View
         style={{
-          // ...border,
           backgroundColor: 'white',
           shadowColor: '#F3BCBE',
-          // shadowColor: 'white',
           shadowOffset: {
             width: 0,
             height: -15,
@@ -329,7 +320,6 @@ function SingleProduct(props) {
             onPress={toggleFav}
             style={{
               height: HEIGHT * 0.073,
-              // alignSelf: 'stretch',
               alignItems: 'center',
               justifyContent: 'center',
               width: H_W.width * 0.16,
@@ -349,11 +339,6 @@ function SingleProduct(props) {
     </WrapperScreen>
   );
 }
-
-const border = {
-  borderWidth: 1,
-  borderColor: 'black',
-};
 
 const mapStateToProps = (state) => {
   return {
